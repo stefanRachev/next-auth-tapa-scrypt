@@ -1,6 +1,11 @@
+import { doSocialLogin } from "@/app/actions";
+
+
+
+
 const LoginForm = () => {
   return (
-    <form action="">
+    <form action={doSocialLogin}>
       <button type="submit" name="action" value="google" className="bg-pink-400 text-white p-1 rounded-md m-1 text-lg">
         Sign In With Google
       </button>
