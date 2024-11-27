@@ -1,9 +1,20 @@
-
+import RegistrationForm from "@/components/RegistrationForm";
+import Link from "next/link";
 
 const RegisterPage = () => {
   return (
-    <div>RegisterPage</div>
-  )
-}
+    <div className="flex flex-col justify-center items-center m-4">
+        <h1>Register page</h1>
+      <RegistrationForm />
 
-export default RegisterPage
+      <p className="my-3">
+        Already have an account?
+        <Link href="/" className="mx-2 underline">
+          Login
+        </Link>
+      </p>
+    </div>
+  );
+};
+
+export default RegisterPage;
