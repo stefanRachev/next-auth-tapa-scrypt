@@ -1,35 +1,39 @@
 import { NextResponse } from "next/server";
 import { createUser } from "@/queries/users";
-
-import bcrypt from "bcryptjs";
 import { dbConnect } from "@/lib/mongo";
 
 export const POST = async (request) => {
-  const {name, email, password} = await request.json();
+  const { name, email, password } = await request.json();
 
   console.log(name, email, password);
 
- 
   await dbConnect();
 
-  const hashedPassword = await bcrypt.hash(password, 5);
- 
   const newUser = {
     name,
-    password: hashedPassword,
-    email
-  }
+    password,
+    email,
+  };
 
   try {
     await createUser(newUser);
+    return new NextResponse("User has been created", { status: 201 });
   } catch (err) {
-    return new NextResponse(err.message, {
-      status: 500,
-    });
+    console.error("Error creating user:", err.message);
+
+    
+    if (err.message === "User with this email already exists") {
+      return new NextResponse(
+        JSON.stringify({ message: err.message }),
+        { status: 400 }
+      );
+    }
+
+   
+    return new NextResponse(
+      JSON.stringify({ message: "Something went wrong" }),
+      { status: 500 }
+    );
   }
 
-  return new NextResponse("User has been created", {
-    status: 201,
-  });
-
- }
+};

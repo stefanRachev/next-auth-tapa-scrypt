@@ -1,11 +1,10 @@
 "use client";
-
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SocialLogin from "./SocialLogin";
 
-
 const RegistrationForm = () => {
-
+  const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
   async function handlerSubmit(e) {
@@ -18,7 +17,7 @@ const RegistrationForm = () => {
       const password = formData.get("password");
 
       const response = await fetch("/api/register", {
-        method:"POST",
+        method: "POST",
         headers: {
           "content-type": "application/json",
         },
@@ -29,11 +28,15 @@ const RegistrationForm = () => {
         }),
       });
 
-      response.status === 201 && router.push("/")
-
-
+      if (response.status === 201) {
+        router.push("/");
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+      }
     } catch (error) {
       console.error(error.message);
+      setErrorMessage("Something went wrong!");
     }
   }
 
@@ -84,6 +87,7 @@ const RegistrationForm = () => {
           Register
         </button>
       </form>
+      {errorMessage && <div className="text-red-500 mt-4">{errorMessage}</div>}
       <SocialLogin />
     </>
   );
