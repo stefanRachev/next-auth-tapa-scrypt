@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHibProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 //import { getUserByEmail } from "./data/users";
+import { authConfig } from "./auth.config";
 import { User } from "./model/User";
 import bcrypt from "bcryptjs";
 
@@ -12,11 +13,13 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  session: {
-    strategy: "jwt",
-  },
+  ...authConfig,
   providers: [
     CredentialsProvider({
+      credentials: {
+        email: {},
+        password: {},
+      },
       async authorize(credentials) {
         if (credentials === null) return null;
         try {
